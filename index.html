@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD operations</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .container { max-width: 600px; margin: auto; }
+    .section { margin-bottom: 20px; }
+    label { display: block; margin: 5px 0 2px; }
+    input, button { padding: 8px; margin-top: 5px; }
+    .result { margin-top: 15px; padding: 10px; background: #f3f3f3; border: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="heading">CRUD Operations</h1>
+    <h1>User Management Interface</h1>
+    <!-- GET User Section -->
+    <div class="section">
+      <h2>Get User</h2>
+      <label for="getUserId">User ID:</label>
+      <input type="number" id="getUserId" placeholder="Enter user ID">
+      <button onclick="handleGetUser()">Get User</button>
+      <div id="getUserResult" class="result"></div>
+    </div>
+
+    <!-- CREATE User Section -->
+    <div class="section">
+      <h2>Create User</h2>
+      <label for="createUserName">Name:</label>
+      <input type="text" id="createUserName" placeholder="Enter name">
+      <label for="createUserEmail">Email:</label>
+      <input type="email" id="createUserEmail" placeholder="Enter email">
+      <button onclick="handleCreateUser()">Create User</button>
+      <div id="createUserResult" class="result"></div>
+    </div>
+
+    <!-- UPDATE User Section -->
+    <div class="section">
+      <h2>Update User</h2>
+      <label for="updateUserId">User ID:</label>
+      <input type="number" id="updateUserId" placeholder="Enter user ID">
+      <label for="updateUserName">New Name:</label>
+      <input type="text" id="updateUserName" placeholder="Enter new name">
+      <label for="updateUserEmail">New Email:</label>
+      <input type="email" id="updateUserEmail" placeholder="Enter new email">
+      <button onclick="handleUpdateUser()">Update User</button>
+      <div id="updateUserResult" class="result"></div>
+    </div>
+
+    <!-- DELETE User Section -->
+    <div class="section">
+      <h2>Delete User</h2>
+      <label for="deleteUserId">User ID:</label>
+      <input type="number" id="deleteUserId" placeholder="Enter user ID">
+      <button onclick="handleDeleteUser()">Delete User</button>
+      <div id="deleteUserResult" class="result"></div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch user by ID
+    function handleGetUser() {
+      const userId = document.getElementById('getUserId').value;
+      fetch(`https://dummyjson.com/users/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById('getUserResult').innerText = JSON.stringify(data, null, 2);
+        })
+        .catch(err => {
+          document.getElementById('getUserResult').innerText = 'Error fetching user';
+        });
+    }
+
+    // Create a new user
+    function handleCreateUser() {
+      const firstName = document.getElementById('createUserName').value;
+      const email = document.getElementById('createUserEmail').value;
+      const user = { firstName, email };
+      fetch('https://dummyjson.com/users/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('createUserResult').innerText = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById('createUserResult').innerText = 'Error creating user';
+      });
+    }
+
+    // Update an existing user
+    function handleUpdateUser() {
+      const userId = document.getElementById('updateUserId').value;
+      const lastName = document.getElementById('updateUserName').value;
+      const email = document.getElementById('updateUserEmail').value;
+      const user = { lastName, email };
+      fetch(`https://dummyjson.com/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user)
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('updateUserResult').innerText = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById('updateUserResult').innerText = 'Error updating user';
+      });
+    }
+
+    // Delete a user by ID
+    function handleDeleteUser() {
+      const userId = document.getElementById('deleteUserId').value;
+      fetch(`https://dummyjson.com/users/${userId}`, {
+        method: 'DELETE'
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('deleteUserResult').innerText = JSON.stringify(data, null, 2);
+      })
+      .catch(err => {
+        document.getElementById('deleteUserResult').innerText = 'Error deleting user';
+      });
+    }
+  </script>
+</body>
+</html>
